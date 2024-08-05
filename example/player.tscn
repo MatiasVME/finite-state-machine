@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0ggonmhiy3ph"]
+
+[ext_resource type="Texture2D" uid="uid://d117ahulee2d5" path="res://icon.png" id="1_hr2my"]
+[ext_resource type="Script" path="res://addons/fsm_furycode/state_machine.gd" id="2_ciaa4"]
+[ext_resource type="Script" path="res://addons/fsm_furycode/state.gd" id="3_yptg7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nnywv"]
+size = Vector2(88, 84)
+
+[node name="Player" type="CharacterBody2D"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_hr2my")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -58.0
+offset_top = -95.0
+offset_right = 58.0
+offset_bottom = -56.0
+text = "idle"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_nnywv")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("target")]
+script = ExtResource("2_ciaa4")
+target = NodePath("..")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("3_yptg7")
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource("3_yptg7")
+
+[node name="Dash" type="Node" parent="StateMachine"]
+script = ExtResource("3_yptg7")
