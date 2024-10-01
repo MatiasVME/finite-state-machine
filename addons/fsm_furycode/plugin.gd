@@ -2,20 +2,26 @@
 
 extends EditorPlugin
 
+const STATE_MACHINE_SCRIPT = preload("res://addons/fsm_furycode/state_machine.gd")
+const STATE_MACHINE_TEXTURE = preload("res://addons/fsm_furycode/node_icons/statemachine.png")
+
+const STATE_SCRIPT = preload("res://addons/fsm_furycode/state.gd")
+const STATE_TEXTURE = preload("res://addons/fsm_furycode/node_icons/state.png")
+
 # Called when the plugin is added to the editor
 func _enter_tree():
 	# Register custom types for StateMachine and State
 	add_custom_type(
 		"StateMachine",
 		"Node",
-		load("res://addons/fsm_furycode/state_machine.gd"),
-		load("res://addons/fsm_furycode/node_icons/statemachine.png")
+		STATE_MACHINE_SCRIPT,
+		STATE_MACHINE_TEXTURE
 	)
 	add_custom_type(
 		"State",
 		"Node",
-		load("res://addons/fsm_furycode/state.gd"),
-		load("res://addons/fsm_furycode/node_icons/state.png")
+		STATE_SCRIPT,
+		STATE_TEXTURE
 	)
 
 

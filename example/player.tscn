@@ -1,15 +1,57 @@
-[gd_scene load_steps=5 format=3 uid="uid://c0ggonmhiy3ph"]
+[gd_scene load_steps=11 format=3 uid="uid://c0ggonmhiy3ph"]
 
 [ext_resource type="Texture2D" uid="uid://d117ahulee2d5" path="res://icon.png" id="1_hr2my"]
+[ext_resource type="Script" path="res://example/player.gd" id="1_tygqv"]
 [ext_resource type="Script" path="res://addons/fsm_furycode/state_machine.gd" id="2_ciaa4"]
-[ext_resource type="Script" path="res://addons/fsm_furycode/state.gd" id="3_yptg7"]
+[ext_resource type="Script" path="res://example/states/idle.gd" id="3_dalip"]
+[ext_resource type="Script" path="res://example/states/run.gd" id="4_mjtvi"]
+[ext_resource type="Script" path="res://example/states/dash.gd" id="5_xsbva"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nnywv"]
 size = Vector2(88, 84)
 
+[sub_resource type="Animation" id="Animation_e63kn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1.1, 1.1)]
+}
+
+[sub_resource type="Animation" id="Animation_e0uim"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.333333, 0.733333),
+"transitions": PackedFloat32Array(2, 0.5),
+"update": 0,
+"values": [Vector2(1.1, 1.1), Vector2(0.8, 0.8)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b1315"]
+_data = {
+"RESET": SubResource("Animation_e63kn"),
+"idle": SubResource("Animation_e0uim")
+}
+
 [node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_tygqv")
 
 [node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(1.1, 1.1)
 texture = ExtResource("1_hr2my")
 
 [node name="Label" type="Label" parent="."]
@@ -24,15 +66,26 @@ vertical_alignment = 1
 [node name="Collision" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_nnywv")
 
+[node name="Anim" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_b1315")
+}
+autoplay = "idle"
+
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("target")]
 script = ExtResource("2_ciaa4")
 target = NodePath("..")
+initial_state = "Idle"
+debug = true
 
 [node name="Idle" type="Node" parent="StateMachine"]
-script = ExtResource("3_yptg7")
+script = ExtResource("3_dalip")
+transitions_names = PackedStringArray("Run")
 
 [node name="Run" type="Node" parent="StateMachine"]
-script = ExtResource("3_yptg7")
+script = ExtResource("4_mjtvi")
+transitions_names = PackedStringArray("Dash", "Idle")
 
 [node name="Dash" type="Node" parent="StateMachine"]
-script = ExtResource("3_yptg7")
+script = ExtResource("5_xsbva")
+transitions_names = PackedStringArray("Idle")
